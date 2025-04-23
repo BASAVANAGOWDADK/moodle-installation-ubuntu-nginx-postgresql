@@ -1,0 +1,4 @@
+CREATE DATABASE moodle;
+CREATE USER moodleuser WITH PASSWORD '123qweasd';
+ALTER DATABASE moodle OWNER TO moodleuser;
+GRANT ALL PRIVILEGES ON DATABASE moodle TO moodleuser;

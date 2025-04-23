@@ -1,0 +1,36 @@
+===================================================================================
+📂 Code-Files
+===================================================================================
+This folder contains essential configuration files for Moodle, including:
+- moodle-config.php              # Moodle configuration file.
+- moodle-nginx.conf              # Nginx configuration for Moodle.
+
+===================================================================================
+📂 Misc-Files
+===================================================================================
+Contains miscellaneous files, scripts, and fixes:
+- moodledata-permissions.sh      # Script to fix Moodle data directory permissions.
+- postgres-setup.sql             # SQL script for PostgreSQL setup.
+- php-max-input-vars-fix.txt     # Fix for max_input_vars issue in PHP.
+- nginx-php-fpm-permission-fix.txt # Fix for Nginx & PHP-FPM permission errors.
+
+===================================================================================
+📂 Script-Files
+===================================================================================
+Scripts for installing and configuring Moodle:
+- install-moodle.sh              # Step-by-step Moodle installation script.
+
+===================================================================================
+📂 Workflow-Docs
+===================================================================================
+Contains detailed documentation and issue fixes:
+- Moodle-Installation.txt 
+
+===================================================================================
+📂 Folder-Purpose.txt
+===================================================================================
+Explanation of each folder and its contents.
+
+===================================================================================
+(End of Document)
+===================================================================================

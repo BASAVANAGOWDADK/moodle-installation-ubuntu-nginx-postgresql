@@ -1,0 +1,129 @@
+===================================================================================
+Issue: Nginx & PHP-FPM Permission Denied (13: Permission denied)
+===================================================================================
+
+-----------------------------------------------------------------------------------
+010 Problem
+-----------------------------------------------------------------------------------
+
+    While trying to access the website hosted with **Nginx** and **PHP 8.3-FPM**, 
+    the following error appeared in the logs:
+
+>   [crit] connect() to unix:/run/php/php8.3-fpm.sock failed (13: Permission denied) 
+>   while connecting to upstream
+    ---------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+020 Root Cause
+-----------------------------------------------------------------------------------
+
+    - Nginx runs as the **nginx** user by default.
+    - PHP-FPM uses a socket file (`/run/php/php8.3-fpm.sock`) that was owned by 
+      **www-data** (user and group).
+    - Since Nginx and PHP-FPM were running under different users, 
+      Nginx **did not have permission** to access the PHP-FPM socket.
+
+-----------------------------------------------------------------------------------
+030 Solution
+-----------------------------------------------------------------------------------
+
+++++++++++++++++++++++++++
+Step 1: Check PHP-FPM Socket Permissions
+++++++++++++++++++++++++++
+
+    a. Run the following command:
+
+>   ls -l /run/php/php8.3-fpm.sock
+    ------------------------------
+
+    Expected output **(before fixing the issue):**
+
+>   srw-rw---- 1 www-data www-data 0 Mar  8 05:13 /run/php/php8.3-fpm.sock
+    ----------------------------------------------------------------------
+
+    This confirms that the socket is owned by `www-data`, but Nginx runs as 
+    a different user (`nginx`), causing a permission issue.
+
+++++++++++++++++++++++++++
+Step 2: Update Nginx to Run as www-data
+++++++++++++++++++++++++++
+
+    a. To ensure both Nginx and PHP-FPM use the same user, update the Nginx configuration:
+
+>   sudo nano /etc/nginx/nginx.conf
+    -------------------------------
+
+    b. Find this line:
+
+>   user nginx;
+    ------------
+
+    c. Change it to:
+
+>   user www-data;
+    --------------
+
+    d. Save and exit (Press **CTRL + X**, then **Y**, then **ENTER**).
+
+++++++++++++++++++++++++++
+Step 3: Restart Services
+++++++++++++++++++++++++++
+
+    a. Restart both Nginx and PHP-FPM:
+
+>   sudo systemctl restart nginx
+    ----------------------------
+>   sudo systemctl restart php8.3-fpm
+    ---------------------------------
+
+++++++++++++++++++++++++++
+Step 4: Verify Changes
+++++++++++++++++++++++++++
+
+    a. Check if Nginx is now running as `www-data`:
+
+>   ps aux | grep nginx
+    -------------------
+
+    Expected output:
+
+>   root       94046  0.0  0.2  23428  2276 ?        Ss   05:17   0:00 nginx: master process 
+>   www-data   94047  0.0  0.5  24784  4964 ?        S    05:17   0:00 nginx: worker process
+    ---------------------------------------------------------------------------
+
+    Now, Nginx is running under `www-data`, matching PHP-FPM.
+
+    b. Check PHP-FPM status to ensure it's running correctly:
+
+>   sudo systemctl status php8.3-fpm
+    --------------------------------
+
+    c. Test if the website is working by opening it in a browser:
+
+>   🔗 https://testwebapp06.xyz/
+    ----------------------------
+
+++++++++++++++++++++++++++
+Step 5: Monitor Logs (If Needed)
+++++++++++++++++++++++++++
+
+    a. If any issues persist, check the logs for errors:
+
+>   sudo tail -f /var/log/nginx/error.log
+    -------------------------------------
+
+-----------------------------------------------------------------------------------
+040 Conclusion
+-----------------------------------------------------------------------------------
+
+    ✅ The **permission denied (13: Permission denied) error** was caused by a **user mismatch** 
+       between Nginx and PHP-FPM.
+
+    ✅ The issue was fixed by making sure **both services run under the same user (`www-data`)**.
+
+    💡 **Tip:** For future projects, always ensure that **Nginx and PHP-FPM use the same user** 
+       to avoid socket permission issues. 🚀
+
+===================================================================================
+(End of Document)
+===================================================================================

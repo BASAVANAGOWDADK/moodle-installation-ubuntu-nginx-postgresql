@@ -1,0 +1,115 @@
+===================================================================================
+Issue: max_input_vars Must Be At Least 5000 in Moodle (Nginx + PHP-FPM)
+===================================================================================
+
+-----------------------------------------------------------------------------------
+010 Problem Description
+-----------------------------------------------------------------------------------
+
+    During Moodle installation on an Nginx + PHP-FPM setup, the system displayed:
+
+>   PHP setting max_input_vars must be at least 5000.
+    -------------------------------------------------
+
+    Running the command:
+
+>   php -i | grep max_input_vars
+    ----------------------------
+
+    Returned:
+
+>   max_input_vars => 1000 => 1000
+    ------------------------------
+
+    This indicates that max_input_vars value is too low.
+
+-----------------------------------------------------------------------------------
+020 Cause
+-----------------------------------------------------------------------------------
+
+    The issue occurs because:
+
+    - The default value of max_input_vars in PHP is **1000**, which is insufficient for Moodle.
+    - The change was mistakenly applied in /etc/php/8.3/cli/php.ini instead of 
+      /etc/php/8.3/fpm/php.ini, which is used by Nginx.
+
+-----------------------------------------------------------------------------------
+030 Solution
+-----------------------------------------------------------------------------------
+
+++++++++++++++++++++++++++
+Step 1: Edit php.ini Files
+++++++++++++++++++++++++++
+
+    a. Open the PHP-FPM configuration file:
+
+>   sudo nano /etc/php/8.3/fpm/php.ini
+    -----------------------------------
+
+    b. Also modify the CLI configuration file:
+
+>   sudo nano /etc/php/8.3/cli/php.ini
+    -----------------------------------
+
+++++++++++++++++++++++++++
+Step 2: Modify max_input_vars
+++++++++++++++++++++++++++
+
+    a. Find this line in both files:
+
+>   max_input_vars = 1000
+    ---------------------
+
+    b. Change it to:
+
+>   max_input_vars = 5000
+    ---------------------
+
+    c. Save and exit (CTRL + X, then Y, then ENTER).
+
+++++++++++++++++++++++++++
+Step 3: Restart PHP-FPM and Nginx
+++++++++++++++++++++++++++
+
+    a. Restart PHP-FPM and Nginx to apply changes:
+
+>   sudo systemctl restart php8.3-fpm
+    ----------------------------------
+>   sudo systemctl restart nginx
+    ----------------------------
+
+++++++++++++++++++++++++++
+Step 4: Verify the Change
+++++++++++++++++++++++++++
+
+    a. Run the following command:
+
+>   php -i | grep max_input_vars
+    ----------------------------
+
+    Expected Output:
+
+>   max_input_vars => 5000 => 5000
+    ------------------------------
+
+    If the value is still **1000**, verify the setting in PHP-FPM:
+
+>   sudo grep max_input_vars /etc/php/8.3/fpm/php.ini
+    -------------------------------------------------
+
+    If it shows **5000**, but Moodle still shows the error, restart the entire server:
+
+>   sudo reboot
+    -----------
+
+-----------------------------------------------------------------------------------
+040 Conclusion
+-----------------------------------------------------------------------------------
+
+    ✅ By updating max_input_vars in both the FPM and CLI PHP configuration files 
+       and restarting the necessary services, the issue is resolved.  
+    ✅ Moodle should now install without this error.  
+
+===================================================================================
+(End of Document)
+===================================================================================

@@ -1,0 +1,218 @@
+===================================================================================
+Moodle Installation on Ubuntu with Nginx & PostgreSQL
+===================================================================================
+
+++++++++++++++++++
+Node 01 - Moodle Server
+++++++++++++++++++
+
+-----------------------------------------------------------------------------------
+010 Update & Upgrade Ubuntu Packages
+-----------------------------------------------------------------------------------
+
+    a. Update system repositories
+
+>   sudo apt update && sudo apt upgrade -y
+    ---------------------------------------
+
+-----------------------------------------------------------------------------------
+020 Install Required Packages
+-----------------------------------------------------------------------------------
+
+    a. Install Nginx, PostgreSQL, PHP 8.3, and dependencies
+
+>   sudo apt install -y nginx postgresql postgresql-contrib php8.3 php8.3-fpm \
+        php8.3-pgsql php8.3-curl php8.3-xml php8.3-mbstring php8.3-zip php8.3-intl \
+        php8.3-gd unzip git certbot python3-certbot-nginx
+    -------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+030 Configure PostgreSQL Database
+-----------------------------------------------------------------------------------
+
+    a. Login to PostgreSQL
+
+>   sudo -i -u postgres
+    --------------------
+
+    b. Create Moodle Database & User
+
+>   psql
+    ----
+
+    c. Execute the following SQL commands:
+    
+    Reference file: `/Moodle-Installation/Misc-Files/postgres-setup.sql`
+
+>   CREATE DATABASE moodle;
+    CREATE USER moodleuser WITH PASSWORD '123qweasd';
+    ALTER DATABASE moodle OWNER TO moodleuser;
+    GRANT ALL PRIVILEGES ON DATABASE moodle TO moodleuser;
+
+>   \q
+    ---
+    Exit PostgreSQL
+
+>   exit
+    ----
+    Return to normal user
+
+-----------------------------------------------------------------------------------
+040 Install & Configure Moodle
+-----------------------------------------------------------------------------------
+
+    a. Clone Moodle repository
+
+>   cd /var/www/html
+    ----------------
+>   sudo git clone -b MOODLE_402_STABLE git://git.moodle.org/moodle.git
+    ---------------------------------------------------------------
+
+    OR download manually from:
+    https://download.moodle.org/releases/latest/
+
+    b. Set permissions
+
+>   sudo chown -R www-data:www-data /var/www/html/moodle
+    ----------------------------------------------------
+>   sudo chmod -R 755 /var/www/html/moodle
+    --------------------------------------
+
+    c. Create Moodle Data Directory
+
+    Reference file: `/Moodle-Installation/Misc-Files/moodledata-permissions.sh`
+
+>   sudo mkdir /var/www/moodledata
+    ------------------------------
+>   sudo chown -R www-data:www-data /var/www/moodledata
+    ----------------------------------------------------
+>   sudo chmod -R 777 /var/www/moodledata
+    --------------------------------------
+
+-----------------------------------------------------------------------------------
+050 Configure Nginx for Moodle
+-----------------------------------------------------------------------------------
+
+    a. Create an Nginx configuration file for Moodle
+
+    Reference file: `/Moodle-Installation/Code-Files/moodle-nginx.conf`
+
+>   sudo nano /etc/nginx/sites-available/moodle
+    -------------------------------------------
+
+>   sudo ln -s /etc/nginx/sites-available/moodle /etc/nginx/sites-enabled/
+    ---------------------------------------------------------------------
+
+    b. Test and restart Nginx
+
+>   sudo nginx -t
+    -------------
+>   sudo systemctl restart nginx
+    ----------------------------
+
+-----------------------------------------------------------------------------------
+060 Obtain SSL Certificate for Moodle
+-----------------------------------------------------------------------------------
+
+    a. Install Certbot
+
+>   sudo apt update
+    ---------------
+>   sudo apt install -y certbot python3-certbot-nginx
+    -------------------------------------------------
+
+    b. Generate SSL certificate
+
+>   sudo certbot --nginx -d testwebapp06.xyz -d www.testwebapp06.xyz
+    ---------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+070 Configure Moodle (config.php)
+-----------------------------------------------------------------------------------
+
+    a. Copy sample configuration file and edit
+
+    Reference file: `/Moodle-Installation/Code-Files/moodle-config.php`
+
+>   cd /var/www/html/moodle
+    ------------------------
+>   sudo nano config.php
+    ---------------------
+
+
+-----------------------------------------------------------------------------------
+080 Restart Services
+-----------------------------------------------------------------------------------
+
+    a. Restart Nginx and PHP-FPM
+
+>   sudo systemctl restart nginx
+    ----------------------------
+>   sudo systemctl restart php8.3-fpm
+    ---------------------------------
+
+-----------------------------------------------------------------------------------
+090 Run Moodle Installation
+-----------------------------------------------------------------------------------
+
+    a. Install Moodle via CLI
+
+>  php admin/cli/install.php \
+    --lang=en \
+    --wwwroot=https://yourdomain.xyz \
+    --dbtype=pgsql \
+    --dbhost=localhost \
+    --dbport=5432 \
+    --dataroot=/var/www/moodledata \
+    --dbname=moodle \
+    --dbuser=moodleuser \
+    --dbpass=123qweasd \
+    --prefix=mdl_ \
+    --adminuser=admin \
+    --adminemail=admin@gmail.com \
+    --adminpass=123@Qweasd \
+    --fullname=testserver \
+    --shortname=testserver \
+    --chmod=0777 \
+    --non-interactive \
+    --agree-license
+
+    -----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+095 Fix: max_input_vars Must Be At Least 5000
+-----------------------------------------------------------------------------------
+
+    If you encounter an issue during installation where `max_input_vars` must be at least **5000**, 
+    follow these steps to resolve it.
+
+    a. Edit PHP configuration file
+
+>   sudo nano /etc/php/8.3/fpm/php.ini
+    -----------------------------------
+
+    b. Find and update the following setting:
+
+>   max_input_vars = 5000
+    ----------------------
+
+    c. Save and exit, then restart PHP-FPM:
+
+>   sudo systemctl restart php8.3-fpm
+    ---------------------------------
+
+    d. Retry the Moodle installation step.
+
+    Reference file: `/Moodle-Installation/Misc-Files/php-max-input-vars-fix.txt`
+
+-----------------------------------------------------------------------------------
+100 Completion
+-----------------------------------------------------------------------------------
+
+    ✅ Moodle installation completed successfully!
+    🔗 Access your site: https://yourdomain.xyz
+    🔑 Admin Login: admin | Password: 123@Qweasd
+
+===================================================================================
+(End of Document)
+===================================================================================
