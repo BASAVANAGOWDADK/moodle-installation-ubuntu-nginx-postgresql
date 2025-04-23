@@ -9,13 +9,13 @@ This repository provides a step-by-step guide and all necessary files to install
 ```
 Moodle-Installation/
 ├── Code-Files/
-│   ├── moodle-config.php            # Sample Moodle configuration file
-│   └── moodle-nginx.conf            # Nginx virtual host configuration
+│   ├── moodle-config.php            # Moodle configuration file
+│   └── moodle-nginx.conf            # Nginx configuration for Moodle
 ├── Misc-Files/
-│   ├── moodledata-permissions.sh    # Script to set proper moodledata permissions
-│   ├── php-max-input-vars-fix.txt   # Config notes for PHP max_input_vars issue
-│   ├── php-max-input-vars-fix.txt   # Config notes for PHP max_input_vars issue
-│   └── postgres-setup.sql           # SQL script to initialize PostgreSQL for Moodle
+│   ├── moodledata-permissions.sh    # Script to fix Moodle data directory permissions
+│   ├── php-max-input-vars-fix.txt   # Fix for max_input_vars issue in PHP
+│   ├── nginx-php-fpm-permission-fix.txt   # Fix for Nginx & PHP-FPM permission errors
+│   └── postgres-setup.sql           # SQL script for PostgreSQL setup
 ├── Script-Files/
 │   └── install-moodle.sh            # Step-by-step Moodle installation script
 ├── Workflow-Docs/
@@ -37,7 +37,7 @@ Moodle-Installation/
 
 ## 📚 Installation Steps
 
-For the complete guide, refer to: [install-guide.md](install-guide.md)
+For the complete guide, refer to: [Moodle-Installation.txt](Moodle-Installation.txt)
 
 Quick summary:
 ```bash
