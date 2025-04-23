@@ -1,2 +1,74 @@
-# moodle-installation-ubuntu-nginx-postgresql
-Complete step-by-step guide to install Moodle using Ubuntu, Nginx, PostgreSQL, and PHP 8.3
+# Moodle Installation Guide (Ubuntu + Nginx + PostgreSQL)
+
+This repository provides a step-by-step guide and all necessary files to install and configure **Moodle** on **Ubuntu** using **Nginx**, **PostgreSQL**, and **PHP 8.3**. This setup is optimized for performance, security, and maintainability.
+
+---
+
+## 📦 Repository Structure
+
+```
+Moodle-Installation/
+├── Code-Files/
+│   ├── moodle-config.php            # Sample Moodle configuration file
+│   └── moodle-nginx.conf            # Nginx virtual host configuration
+├── Misc-Files/
+│   ├── moodledata-permissions.sh    # Script to set proper moodledata permissions
+│   ├── php-max-input-vars-fix.txt   # Config notes for PHP max_input_vars issue
+│   └── postgres-setup.sql           # SQL script to initialize PostgreSQL for Moodle
+├── install-guide.md                 # Full installation instructions (Markdown)
+└── README.md                        # Project overview and usage info
+```
+
+---
+
+## 🚀 Features
+- Latest **Moodle** deployment on Ubuntu
+- **Nginx** web server for performance
+- **PostgreSQL** database
+- Sample **nginx** and **PHP** configs
+- Shell scripts and SQL files for automation
+
+---
+
+## 📚 Installation Steps
+
+For the complete guide, refer to: [install-guide.md](install-guide.md)
+
+Quick summary:
+```bash
+1. Update Ubuntu & install dependencies
+2. Configure PostgreSQL with moodle database & user
+3. Clone Moodle and set permissions
+4. Configure Nginx (virtual host)
+5. Obtain SSL with Certbot
+6. Run Moodle CLI installer
+```
+
+---
+
+## ✅ Requirements
+- Ubuntu 22.04+
+- Nginx
+- PostgreSQL
+- PHP 8.3
+- Moodle 4.2+ (Stable)
+
+---
+
+## 🛡 License
+MIT License — use freely, modify, and contribute!
+
+---
+
+## 🤝 Contribute
+Pull requests welcome! If you find issues or improvements, feel free to fork and contribute.
+
+---
+
+## 📩 Contact
+Made with ❤️ by Basavanagowda D K — feel free to reach out for feedback or suggestions!
+
+---
+
+> ⭐ Star this repo if you found it useful!
+
