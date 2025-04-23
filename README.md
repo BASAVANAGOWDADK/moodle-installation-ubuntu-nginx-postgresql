@@ -14,8 +14,13 @@ Moodle-Installation/
 ├── Misc-Files/
 │   ├── moodledata-permissions.sh    # Script to set proper moodledata permissions
 │   ├── php-max-input-vars-fix.txt   # Config notes for PHP max_input_vars issue
+│   ├── php-max-input-vars-fix.txt   # Config notes for PHP max_input_vars issue
 │   └── postgres-setup.sql           # SQL script to initialize PostgreSQL for Moodle
-├── install-guide.md                 # Full installation instructions (Markdown)
+├── Script-Files/
+│   └── install-moodle.sh            # Step-by-step Moodle installation script
+├── Workflow-Docs/
+│   └── Moodle-Installation.txt      # Contains detailed documentation and issue fixes
+├── Folder-Purpose.txt               # Explanation of each folder and its contents
 └── README.md                        # Project overview and usage info
 ```
 
