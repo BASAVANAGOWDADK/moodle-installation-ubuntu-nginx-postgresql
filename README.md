@@ -37,7 +37,7 @@ Moodle-Installation/
 
 ## 📚 Installation Steps
 
-For the complete guide, refer to: [Moodle-Installation.txt](Moodle-Installation.txt)
+For the complete guide, refer to: [Workflow-Docs/Moodle-Installation.txt](Moodle-Installation.txt)
 
 Quick summary:
 ```bash
